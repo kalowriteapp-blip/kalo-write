@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -89,7 +89,7 @@ export default function Home() {
               <CardContent>
                 <Textarea
                   value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
+                  onChange={(e: { target: { value: SetStateAction<string>; }; }) => setInputText(e.target.value)}
                   placeholder="Paste your AI-generated text here..."
                   className="min-h-[300px] resize-none"
                 />
@@ -259,7 +259,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h3 className="text-3xl font-bold text-gray-900 mb-4">Get in Touch</h3>
-            <p className="text-xl text-gray-600">Have questions? We'd love to hear from you</p>
+            <p className="text-xl text-gray-600">Have questions? We&apos;d love to hear from you</p>
           </div>
           
           <div className="max-w-2xl mx-auto">
