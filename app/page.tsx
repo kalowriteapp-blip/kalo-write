@@ -9,12 +9,12 @@ import { toast } from 'react-hot-toast';
 import { humanizeText } from '@/lib/gemini';
 
 export default function Home() {
-  const [inputText, setInputText] = useState('');
-  const [humanizedText, setHumanizedText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [inputText, setInputText] = useState<string>('');
+  const [humanizedText, setHumanizedText] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
 
-  const handleHumanize = async () => {
+  const handleHumanize = async (): Promise<void> => {
     if (!inputText.trim()) {
       toast.error('Please enter some text to humanize');
       return;
@@ -33,7 +33,7 @@ export default function Home() {
     }
   };
 
-  const handleCopy = async () => {
+  const handleCopy = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(humanizedText);
       setCopied(true);

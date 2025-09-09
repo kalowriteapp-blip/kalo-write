@@ -17,7 +17,11 @@ export const metadata = {
   description: "Transform AI-generated content into natural, human-like text that passes all detection tools",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body
