@@ -40,6 +40,7 @@ export default function Home() {
       toast.success('Text copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
+      console.error('Error copying text:', error);
       toast.error('Failed to copy text');
     }
   };
