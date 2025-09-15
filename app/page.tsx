@@ -13,6 +13,7 @@ import { LoginForm } from '@/components/auth/LoginForm';
 import { RegisterForm } from '@/components/auth/RegisterForm';
 import { HumanizationHistory } from '@/components/HumanizationHistory';
 import { HumanizationDetail } from '@/components/HumanizationDetail';
+import { TestNavigation } from '@/components/TestNavigation';
 import { Humanization } from '@/types';
 
 interface HumanizeTextResponse {
@@ -163,6 +164,13 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Test Navigation */}
+      <section className="py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <TestNavigation />
+        </div>
+      </section>
 
       {/* Hero Section */}
       <section className="py-20">
