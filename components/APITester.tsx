@@ -11,13 +11,13 @@ import { toast } from 'react-hot-toast';
 interface APITest {
   name: string;
   query: string;
-  variables?: any;
+  variables?: Record<string, unknown>;
   headers?: Record<string, string>;
 }
 
 interface TestResult {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
   responseTime?: number;
 }
@@ -166,10 +166,10 @@ export const APITester: React.FC = () => {
           responseTime
         };
       }
-    } catch (error) {
+    } catch (err) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Network error',
+        error: err instanceof Error ? err.message : 'Network error',
         responseTime: Date.now() - startTime
       };
     }
@@ -178,7 +178,13 @@ export const APITester: React.FC = () => {
   const runPredefinedTest = async (test: APITest) => {
     setIsLoading(true);
     const result = await executeTest(test);
-    setResults(prev => [...prev, { ...result, data: { testName: test.name, ...result.data } }]);
+    setResults(prev => [...prev, { 
+      ...result, 
+      data: { 
+        testName: test.name, 
+        ...(result.data as Record<string, unknown> || {})
+      } 
+    }]);
     setIsLoading(false);
     
     if (result.success) {
@@ -199,7 +205,7 @@ export const APITester: React.FC = () => {
     let variables = {};
     try {
       variables = JSON.parse(customVariables);
-    } catch (error) {
+    } catch {
       toast.error('Invalid JSON in variables');
       setIsLoading(false);
       return;
@@ -212,7 +218,13 @@ export const APITester: React.FC = () => {
     };
 
     const result = await executeTest(test);
-    setResults(prev => [...prev, { ...result, data: { testName: 'Custom Query', ...result.data } }]);
+    setResults(prev => [...prev, { 
+      ...result, 
+      data: { 
+        testName: 'Custom Query', 
+        ...(result.data as Record<string, unknown> || {})
+      } 
+    }]);
     setIsLoading(false);
     
     if (result.success) {
@@ -312,7 +324,7 @@ export const APITester: React.FC = () => {
                         <XCircle className="h-5 w-5 text-red-500" />
                       )}
                       <span className="font-medium">
-                        {result.data?.testName || `Test ${index + 1}`}
+                        {(result.data as any)?.testName || `Test ${index + 1}`}
                       </span>
                       {result.responseTime && (
                         <Badge variant="outline">{result.responseTime}ms</Badge>
@@ -331,11 +343,11 @@ export const APITester: React.FC = () => {
                     <div className="text-red-600 text-sm mb-2">{result.error}</div>
                   )}
                   
-                  {result.data && (
+                  {result.data ? (
                     <pre className="bg-gray-100 p-3 rounded text-xs overflow-x-auto">
-                      {JSON.stringify(result.data, null, 2)}
+                      {JSON.stringify(result.data as Record<string, unknown>, null, 2)}
                     </pre>
-                  )}
+                  ) : null}
                 </div>
               ))}
             </div>

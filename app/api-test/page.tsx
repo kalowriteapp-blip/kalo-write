@@ -3,6 +3,7 @@
 import { APITester } from '@/components/APITester';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TestTube, Database, Zap } from 'lucide-react';
+import Link from 'next/link';
 
 export default function APITestPage() {
   return (
@@ -82,9 +83,9 @@ export default function APITestPage() {
               <div className="space-y-2">
                 <h3 className="font-medium">Frontend Pages</h3>
                 <ul className="text-sm space-y-1 text-gray-600">
-                  <li>• <a href="/" className="text-blue-600 hover:underline">Main App</a></li>
-                  <li>• <a href="/test-humanize" className="text-blue-600 hover:underline">Humanization Test</a></li>
-                  <li>• <a href="/api-test" className="text-blue-600 hover:underline">API Test Suite</a></li>
+                  <li>• <Link href="/" className="text-blue-600 hover:underline">Main App</Link></li>
+                  <li>• <Link href="/test-humanize" className="text-blue-600 hover:underline">Humanization Test</Link></li>
+                  <li>• <Link href="/api-test" className="text-blue-600 hover:underline">API Test Suite</Link></li>
                 </ul>
               </div>
             </div>

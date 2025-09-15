@@ -10,7 +10,7 @@ import { toast } from 'react-hot-toast';
 
 interface TestResult {
   success: boolean;
-  data?: any;
+  data?: unknown;
   error?: string;
   responseTime?: number;
 }
@@ -21,6 +21,22 @@ interface HumanizationResult {
   humanizedText: string;
   wordCount: number;
   createdAt: string;
+}
+
+interface RegistrationResponse {
+  access_token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    subscription: {
+      id: string;
+      plan: string;
+      status: string;
+      wordLimit: number;
+      usedWords: number;
+    };
+  };
 }
 
 export default function TestHumanizePage() {
@@ -74,10 +90,10 @@ export default function TestHumanizePage() {
           responseTime
         };
       }
-    } catch (error) {
+    } catch (err) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Connection failed',
+        error: err instanceof Error ? err.message : 'Connection failed',
         responseTime: Date.now() - startTime
       };
     }
@@ -210,7 +226,13 @@ export default function TestHumanizePage() {
     // Test 1: Backend Connection
     toast.loading('Testing backend connection...');
     const connectionTest = await testBackendConnection();
-    results.push({ ...connectionTest, data: { test: 'Backend Connection', ...connectionTest.data } });
+    results.push({ 
+      ...connectionTest, 
+      data: { 
+        test: 'Backend Connection', 
+        ...(connectionTest.data as Record<string, unknown> || {})
+      } 
+    });
     setTestResults([...results]);
 
     if (!connectionTest.success) {
@@ -224,7 +246,13 @@ export default function TestHumanizePage() {
     // Test 2: User Registration
     toast.loading('Testing user registration...');
     const registrationTest = await testRegistration();
-    results.push({ ...registrationTest, data: { test: 'User Registration', ...registrationTest.data } });
+    results.push({ 
+      ...registrationTest, 
+      data: { 
+        test: 'User Registration', 
+        ...(registrationTest.data as Record<string, unknown> || {})
+      } 
+    });
     setTestResults([...results]);
 
     if (!registrationTest.success) {
@@ -236,7 +264,7 @@ export default function TestHumanizePage() {
     toast.success('User registered successfully');
 
     // Test 3: Humanization
-    const token = registrationTest.data?.access_token;
+    const token = (registrationTest.data as RegistrationResponse)?.access_token;
     if (!token) {
       toast.error('No access token received');
       setIsLoading(false);
@@ -245,11 +273,17 @@ export default function TestHumanizePage() {
 
     toast.loading('Testing humanization...');
     const humanizationTest = await testHumanization(inputText || testTexts[0], token);
-    results.push({ ...humanizationTest, data: { test: 'Text Humanization', ...humanizationTest.data } });
+    results.push({ 
+      ...humanizationTest, 
+      data: { 
+        test: 'Text Humanization', 
+        ...(humanizationTest.data as Record<string, unknown> || {})
+      } 
+    });
     setTestResults([...results]);
 
     if (humanizationTest.success) {
-      setHumanizationResult(humanizationTest.data);
+      setHumanizationResult(humanizationTest.data as HumanizationResult);
       toast.success('Humanization test completed successfully!');
     } else {
       toast.error('Humanization test failed');
@@ -264,7 +298,7 @@ export default function TestHumanizePage() {
       setCopied(true);
       toast.success('Text copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
+    } catch {
       toast.error('Failed to copy text');
     }
   };
@@ -364,7 +398,7 @@ export default function TestHumanizePage() {
                       {getStatusIcon(result.success)}
                       <div>
                         <h3 className="font-medium text-gray-900">
-                          {result.data?.test || `Test ${index + 1}`}
+                          {(result.data as any)?.test || `Test ${index + 1}`}
                         </h3>
                         <p className="text-sm text-gray-500">
                           {result.success ? 'Success' : 'Failed'}
