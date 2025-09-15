@@ -14,6 +14,7 @@ import { RegisterForm } from '@/components/auth/RegisterForm';
 import { HumanizationHistory } from '@/components/HumanizationHistory';
 import { HumanizationDetail } from '@/components/HumanizationDetail';
 import { TestNavigation } from '@/components/TestNavigation';
+import { EnvironmentDebug } from '@/components/EnvironmentDebug';
 import { Humanization } from '@/types';
 
 interface HumanizeTextResponse {
@@ -169,6 +170,7 @@ export default function Home() {
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TestNavigation />
+          <EnvironmentDebug />
         </div>
       </section>
 

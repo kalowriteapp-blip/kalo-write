@@ -35,13 +35,28 @@ export const getApiUrl = () => {
 
 // Helper function to get the correct GraphQL URL
 export const getGraphQLUrl = () => {
+  // Debug logging
+  console.log('Environment check:', {
+    NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    isDevelopment: config.isDevelopment,
+    isProduction: config.isProduction
+  });
+  
+  // Always use environment variable if set (for production)
+  if (process.env.NEXT_PUBLIC_GRAPHQL_URL) {
+    console.log('Using NEXT_PUBLIC_GRAPHQL_URL:', process.env.NEXT_PUBLIC_GRAPHQL_URL);
+    return process.env.NEXT_PUBLIC_GRAPHQL_URL;
+  }
+  
+  // Fallback to localhost for development
   if (config.isDevelopment) {
+    console.log('Using development fallback: http://localhost:3001/graphql');
     return 'http://localhost:3001/graphql';
   }
   
-  if (config.vercel.url) {
-    return `https://${config.vercel.url}/graphql`;
-  }
-  
-  return config.api.graphqlUrl;
+  // This should not happen in production if env var is set
+  console.warn('NEXT_PUBLIC_GRAPHQL_URL not set, using fallback');
+  return 'http://localhost:3001/graphql';
 };
