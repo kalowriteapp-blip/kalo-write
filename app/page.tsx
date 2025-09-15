@@ -4,13 +4,16 @@ import { SetStateAction, useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Copy, Check, User, LogOut } from 'lucide-react';
+import { Loader2, Copy, Check, User, LogOut, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useAuth } from '@/contexts/AuthContext';
 import { HUMANIZE_TEXT_MUTATION, GET_REMAINING_WORDS_QUERY } from '@/lib/graphql/queries';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { RegisterForm } from '@/components/auth/RegisterForm';
+import { HumanizationHistory } from '@/components/HumanizationHistory';
+import { HumanizationDetail } from '@/components/HumanizationDetail';
+import { Humanization } from '@/types';
 
 interface HumanizeTextResponse {
   humanizeText: {
@@ -32,6 +35,8 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [showAuth, setShowAuth] = useState<'login' | 'register' | null>(null);
+  const [selectedHumanization, setSelectedHumanization] = useState<Humanization | null>(null);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
 
   const { user, logout } = useAuth();
 
@@ -54,7 +59,7 @@ export default function Home() {
     setIsLoading(true);
     try {
       const { data } = await humanizeTextMutation({
-        variables: { originalText: inputText },
+        variables: { input: { text: inputText } },
       });
 
       if (data?.humanizeText) {
@@ -107,6 +112,9 @@ export default function Home() {
                       {remainingWords} words remaining
                     </div>
                   </div>
+                  <Button variant="outline" onClick={() => setShowHistory(true)}>
+                    History
+                  </Button>
                   <Button variant="outline" onClick={logout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Logout
@@ -251,7 +259,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Rest of your existing sections... */}
+      {/* History Modal */}
+      {showHistory && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-lg font-semibold">Humanization History</h2>
+              <Button variant="ghost" onClick={() => setShowHistory(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-4">
+              <HumanizationHistory 
+                onSelectHumanization={(humanization) => {
+                  setSelectedHumanization(humanization);
+                  setShowHistory(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Humanization Detail Modal */}
+      <HumanizationDetail
+        humanization={selectedHumanization}
+        onClose={() => setSelectedHumanization(null)}
+      />
     </div>
   );
 }

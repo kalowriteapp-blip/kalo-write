@@ -61,8 +61,8 @@ export const REGISTER_MUTATION = gql`
 `;
 
 export const HUMANIZE_TEXT_MUTATION = gql`
-  mutation HumanizeText($originalText: String!) {
-    humanizeText(originalText: $originalText) {
+  mutation HumanizeText($input: HumanizeTextInput!) {
+    humanizeText(input: $input) {
       id
       originalText
       humanizedText
@@ -102,5 +102,35 @@ export const GET_USER_QUERY = gql`
 export const GET_REMAINING_WORDS_QUERY = gql`
   query GetRemainingWords {
     getRemainingWords
+  }
+`;
+
+export const GET_USER_HUMANIZATIONS_QUERY = gql`
+  query GetUserHumanizations($limit: Int, $offset: Int) {
+    getUserHumanizations(limit: $limit, offset: $offset) {
+      id
+      originalText
+      humanizedText
+      wordCount
+      createdAt
+    }
+  }
+`;
+
+export const GET_HUMANIZATION_QUERY = gql`
+  query GetHumanization($id: ID!) {
+    getHumanization(id: $id) {
+      id
+      originalText
+      humanizedText
+      wordCount
+      createdAt
+    }
+  }
+`;
+
+export const DELETE_HUMANIZATION_MUTATION = gql`
+  mutation DeleteHumanization($id: ID!) {
+    deleteHumanization(id: $id)
   }
 `;

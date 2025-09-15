@@ -4,29 +4,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useMutation, useQuery } from '@apollo/client/react';
 import { LOGIN_MUTATION, REGISTER_MUTATION, GET_USER_QUERY } from '@/lib/graphql/queries';
 import { toast } from 'react-hot-toast';
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  avatar?: string;
-  subscription?: {
-    id: string;
-    plan: string;
-    status: string;
-    usedWords: number;
-    wordLimit: number;
-    currentPeriodStart?: string;
-    currentPeriodEnd?: string;
-  };
-  humanizations: Array<{
-    id: string;
-    originalText: string;
-    humanizedText: string;
-    wordCount: number;
-    createdAt: string;
-  }>;
-}
+import { User } from '@/types';
 
 interface AuthContextType {
   user: User | null;

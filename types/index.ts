@@ -1,8 +1,10 @@
 export interface User {
   id: string;
   email: string;
+  name: string;
+  avatar?: string;
   subscription?: Subscription;
-  wordCount: number;
+  humanizations?: Humanization[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -12,9 +14,23 @@ export interface Subscription {
   userId: string;
   plan: 'free' | 'pro' | 'enterprise';
   status: 'active' | 'canceled' | 'past_due';
-  currentPeriodEnd: Date;
+  currentPeriodStart?: string;
+  currentPeriodEnd?: string;
   wordLimit: number;
   usedWords: number;
+}
+
+export interface Humanization {
+  id: string;
+  userId: string;
+  originalText: string;
+  humanizedText: string;
+  wordCount: number;
+  createdAt: string;
+}
+
+export interface HumanizeTextInput {
+  text: string;
 }
 
 export interface HumanizeRequest {
