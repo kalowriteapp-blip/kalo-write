@@ -25,6 +25,7 @@ interface HumanizeTextResponse {
   };
 }
 
+
 interface RemainingWordsResponse {
   getRemainingWords: number;
 }
