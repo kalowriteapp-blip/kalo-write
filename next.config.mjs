@@ -25,9 +25,9 @@ const nextConfig = {
     return config;
   },
   // Add experimental features to help with chunk loading
-  experimental: {
-    optimizePackageImports: ['lucide-react', '@apollo/client'],
-  },
+  // experimental: {
+  //   optimizePackageImports: ['lucide-react', '@apollo/client'],
+  // },
 };
 
 export default nextConfig;
