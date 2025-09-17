@@ -1,9 +1,7 @@
 'use client';
 
 import { SetStateAction, useState } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { Loader2, Copy, Check, User, LogOut, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery } from '@apollo/client/react';
