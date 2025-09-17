@@ -1,23 +1,23 @@
 'use client';
 
 import { SetStateAction, useState } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '../components/ui/textarea';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Loader2, Copy, Check, User, LogOut, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQuery } from '@apollo/client/react';
-import { useAuth } from '@/contexts/AuthContext';
-import { HUMANIZE_TEXT_MUTATION, GET_REMAINING_WORDS_QUERY } from '@/lib/graphql/queries';
-import { LoginForm } from '@/components/auth/LoginForm';
-import { RegisterForm } from '@/components/auth/RegisterForm';
-import { HumanizationHistory } from '@/components/HumanizationHistory';
-import { HumanizationDetail } from '@/components/HumanizationDetail';
-import { TestNavigation } from '@/components/TestNavigation';
-import { DebugPanel } from '@/components/DebugPanel';
-import { ClientOnly } from '@/components/ClientOnly';
-import { SimpleTest } from '@/components/SimpleTest';
-import { Humanization } from '@/types';
+import { useAuth } from '../contexts/AuthContext';
+import { HUMANIZE_TEXT_MUTATION, GET_REMAINING_WORDS_QUERY } from '../lib/graphql/queries';
+import { LoginForm } from '../components/auth/LoginForm';
+import { RegisterForm } from '../components/auth/RegisterForm';
+import { HumanizationHistory } from '../components/HumanizationHistory';
+import { HumanizationDetail } from '../components/HumanizationDetail';
+import { TestNavigation } from '../components/TestNavigation';
+import { DebugPanel } from '../components/DebugPanel';
+import { ClientOnly } from '../components/ClientOnly';
+import { SimpleTest } from '../components/SimpleTest';
+import { Humanization } from '../types';
 
 interface HumanizeTextResponse {
   humanizeText: {

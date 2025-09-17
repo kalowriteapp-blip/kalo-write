@@ -1,7 +1,7 @@
 'use client';
 
-import { APITester } from '@/components/APITester';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { APITester } from '../../components/APITester';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { TestTube, Database, Zap } from 'lucide-react';
 import Link from 'next/link';
 

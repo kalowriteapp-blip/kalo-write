@@ -1,3 +1,5 @@
+import path from 'path';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typedRoutes: true,
@@ -22,12 +24,19 @@ const nextConfig = {
       };
     }
     
+    // Explicitly configure path aliases for Vercel
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(process.cwd()),
+      '@/components': path.resolve(process.cwd(), 'components'),
+      '@/components/ui': path.resolve(process.cwd(), 'components/ui'),
+      '@/lib': path.resolve(process.cwd(), 'lib'),
+      '@/types': path.resolve(process.cwd(), 'types'),
+      '@/contexts': path.resolve(process.cwd(), 'contexts'),
+    };
+    
     return config;
   },
-  // Ensure proper module resolution in production
-  // experimental: {
-  //   esmExternals: 'loose',
-  // },
 };
 
 export default nextConfig;
