@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
+import { GoogleSignInButton } from './GoogleSignInButton';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -69,6 +70,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegis
               'Sign In'
             )}
           </Button>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+          
+          <GoogleSignInButton 
+            onSuccess={onSuccess}
+            onError={(error) => console.error('Google Sign-In error:', error)}
+          />
+          
           {onSwitchToRegister && (
             <p className="text-center text-sm text-gray-600">
               Don&apos;t have an account?{' '}

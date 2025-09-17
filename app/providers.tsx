@@ -5,7 +5,6 @@ import { ApolloProvider } from '@apollo/client/react';
 import { apolloClient } from '@/lib/apollo-client';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { useEffect } from 'react';
 
 interface ProvidersProps {
   children: React.ReactNode;

@@ -80,7 +80,7 @@ export default function Home() {
 
       if (data && typeof data === 'object' && 'humanizeText' in data && data.humanizeText) {
         console.log('[Humanize] Humanization successful');
-        setHumanizedText((data as any).humanizeText.humanizedText);
+        setHumanizedText((data as HumanizeTextResponse).humanizeText.humanizedText);
         toast.success('Text humanized successfully!');
         refetchRemainingWords(); // Refresh remaining words
       } else {
@@ -90,8 +90,8 @@ export default function Home() {
     } catch (error: unknown) {
       console.error('[Humanize] Error humanizing text:', error);
       console.error('[Humanize] Error type:', typeof error);
-      console.error('[Humanize] Error keys:', error ? Object.keys(error as any) : 'null');
-      console.error('[Humanize] Error stack:', (error as any)?.stack);
+      console.error('[Humanize] Error keys:', error ? Object.keys(error as Record<string, unknown>) : 'null');
+      console.error('[Humanize] Error stack:', (error as Error)?.stack);
       const errorMessage = error instanceof Error ? error.message : 'Failed to humanize text. Please try again.';
       toast.error(errorMessage);
     } finally {
@@ -187,30 +187,35 @@ export default function Home() {
         </div>
       )}
 
-      {/* Test Navigation */}
-      <section className="py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <TestNavigation />
-        </div>
-      </section>
+      {/* Development-only Test Sections */}
+      {process.env.NODE_ENV === 'development' && (
+        <>
+          {/* Test Navigation */}
+          <section className="py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <TestNavigation />
+            </div>
+          </section>
 
-      {/* Debug Panel - Remove this in production */}
-      <section className="py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ClientOnly>
-            <DebugPanel />
-          </ClientOnly>
-        </div>
-      </section>
+          {/* Debug Panel */}
+          <section className="py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <ClientOnly>
+                <DebugPanel />
+              </ClientOnly>
+            </div>
+          </section>
 
-      {/* Simple Test - Remove this in production */}
-      <section className="py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ClientOnly>
-            <SimpleTest />
-          </ClientOnly>
-        </div>
-      </section>
+          {/* Simple Test */}
+          <section className="py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <ClientOnly>
+                <SimpleTest />
+              </ClientOnly>
+            </div>
+          </section>
+        </>
+      )}
 
       {/* Hero Section */}
       <section className="py-20">

@@ -24,21 +24,6 @@ interface HumanizationResult {
   createdAt: string;
 }
 
-interface RegistrationResponse {
-  access_token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    subscription: {
-      id: string;
-      plan: string;
-      status: string;
-      wordLimit: number;
-      usedWords: number;
-    };
-  };
-}
 
 export default function TestHumanizePage() {
   const [inputText, setInputText] = useState<string>('');
@@ -249,8 +234,8 @@ export default function TestHumanizePage() {
     } catch (error) {
       console.error('[TestHumanization] Error caught:', error);
       console.error('[TestHumanization] Error type:', typeof error);
-      console.error('[TestHumanization] Error keys:', error ? Object.keys(error as any) : 'null');
-      console.error('[TestHumanization] Error stack:', (error as any)?.stack);
+      console.error('[TestHumanization] Error keys:', error ? Object.keys(error as Record<string, unknown>) : 'null');
+      console.error('[TestHumanization] Error stack:', (error as Error)?.stack);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Humanization request failed',
@@ -524,7 +509,7 @@ export default function TestHumanizePage() {
                       {getStatusIcon(result.success)}
                       <div>
                         <h3 className="font-medium text-gray-900">
-                          {(result.data as any)?.test || `Test ${index + 1}`}
+                          {String((result.data as Record<string, unknown>)?.test) || `Test ${index + 1}`}
                         </h3>
                         <p className="text-sm text-gray-500">
                           {result.success ? 'Success' : 'Failed'}

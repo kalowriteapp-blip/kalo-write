@@ -7,16 +7,12 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export const DebugPanel: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
+  const { login, user, loading } = useAuth();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  if (!isClient) {
-    return null; // Don't render on server side
-  }
-  const [logs, setLogs] = useState<string[]>([]);
-  const { login, user, loading } = useAuth();
 
   const addLog = (message: string) => {
     const timestamp = new Date().toISOString();
@@ -43,6 +39,10 @@ export const DebugPanel: React.FC = () => {
       console.error = originalError;
     };
   }, []);
+
+  if (!isClient) {
+    return null; // Don't render on server side
+  }
 
   const testLogin = async () => {
     addLog('Testing login with test credentials...');

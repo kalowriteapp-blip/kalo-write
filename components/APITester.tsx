@@ -187,8 +187,8 @@ export const APITester: React.FC = () => {
     } catch (err) {
       console.error(`[API Test] Test ${test.name} threw error:`, err);
       console.error(`[API Test] Error type:`, typeof err);
-      console.error(`[API Test] Error keys:`, err ? Object.keys(err as any) : 'null');
-      console.error(`[API Test] Error stack:`, (err as any)?.stack);
+      console.error(`[API Test] Error keys:`, err ? Object.keys(err as Record<string, unknown>) : 'null');
+      console.error(`[API Test] Error stack:`, (err as Error)?.stack);
       return {
         success: false,
         error: err instanceof Error ? err.message : 'Network error',
@@ -346,7 +346,7 @@ export const APITester: React.FC = () => {
                         <XCircle className="h-5 w-5 text-red-500" />
                       )}
                       <span className="font-medium">
-                        {(result.data as any)?.testName || `Test ${index + 1}`}
+                        {String((result.data as Record<string, unknown>)?.testName) || `Test ${index + 1}`}
                       </span>
                       {result.responseTime && (
                         <Badge variant="outline">{result.responseTime}ms</Badge>
