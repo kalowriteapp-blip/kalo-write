@@ -63,7 +63,7 @@ This document provides comprehensive testing instructions for the KaloWrite huma
 #### 1. User Registration
 ```graphql
 mutation Register($input: RegisterInput!) {
-  register(registerInput: $input) {
+  register(input: $input) {
     access_token
     user {
       id
@@ -84,7 +84,7 @@ mutation Register($input: RegisterInput!) {
 #### 2. User Login
 ```graphql
 mutation Login($input: LoginInput!) {
-  login(loginInput: $input) {
+  login(input: $input) {
     access_token
     user {
       id

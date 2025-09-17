@@ -14,6 +14,9 @@ import { RegisterForm } from '@/components/auth/RegisterForm';
 import { HumanizationHistory } from '@/components/HumanizationHistory';
 import { HumanizationDetail } from '@/components/HumanizationDetail';
 import { TestNavigation } from '@/components/TestNavigation';
+import { DebugPanel } from '@/components/DebugPanel';
+import { ClientOnly } from '@/components/ClientOnly';
+import { SimpleTest } from '@/components/SimpleTest';
 import { Humanization } from '@/types';
 
 interface HumanizeTextResponse {
@@ -48,32 +51,51 @@ export default function Home() {
   });
 
   const handleHumanize = async (): Promise<void> => {
+    console.log('[Humanize] Starting humanization process...');
+    console.log('[Humanize] User:', user);
+    console.log('[Humanize] Input text length:', inputText.length);
+    
     if (!user) {
+      console.log('[Humanize] No user, showing auth modal');
       setShowAuth('login');
       return;
     }
 
     if (!inputText.trim()) {
+      console.log('[Humanize] No input text');
       toast.error('Please enter some text to humanize');
       return;
     }
 
     setIsLoading(true);
     try {
+      console.log('[Humanize] Calling humanizeTextMutation...');
       const { data } = await humanizeTextMutation({
         variables: { input: { text: inputText } },
       });
 
-      if (data?.humanizeText) {
-        setHumanizedText(data.humanizeText.humanizedText);
+      console.log('[Humanize] Mutation response:', data);
+      console.log('[Humanize] Data type:', typeof data);
+      console.log('[Humanize] Data keys:', data ? Object.keys(data) : 'null');
+
+      if (data && typeof data === 'object' && 'humanizeText' in data && data.humanizeText) {
+        console.log('[Humanize] Humanization successful');
+        setHumanizedText((data as any).humanizeText.humanizedText);
         toast.success('Text humanized successfully!');
         refetchRemainingWords(); // Refresh remaining words
+      } else {
+        console.log('[Humanize] No humanizeText data in response');
+        toast.error('No humanized text received');
       }
     } catch (error: unknown) {
-      console.error('Error humanizing text:', error);
+      console.error('[Humanize] Error humanizing text:', error);
+      console.error('[Humanize] Error type:', typeof error);
+      console.error('[Humanize] Error keys:', error ? Object.keys(error as any) : 'null');
+      console.error('[Humanize] Error stack:', (error as any)?.stack);
       const errorMessage = error instanceof Error ? error.message : 'Failed to humanize text. Please try again.';
       toast.error(errorMessage);
     } finally {
+      console.log('[Humanize] Process completed, setting loading to false');
       setIsLoading(false);
     }
   };
@@ -169,6 +191,24 @@ export default function Home() {
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TestNavigation />
+        </div>
+      </section>
+
+      {/* Debug Panel - Remove this in production */}
+      <section className="py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ClientOnly>
+            <DebugPanel />
+          </ClientOnly>
+        </div>
+      </section>
+
+      {/* Simple Test - Remove this in production */}
+      <section className="py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ClientOnly>
+            <SimpleTest />
+          </ClientOnly>
         </div>
       </section>
 

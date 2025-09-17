@@ -46,7 +46,7 @@ export const APITester: React.FC = () => {
       name: 'User Registration',
       query: `
         mutation Register($input: RegisterInput!) {
-          register(registerInput: $input) {
+          register(input: $input) {
             access_token
             user {
               id
@@ -75,7 +75,7 @@ export const APITester: React.FC = () => {
       name: 'User Login',
       query: `
         mutation Login($input: LoginInput!) {
-          login(loginInput: $input) {
+          login(input: $input) {
             access_token
             user {
               id
@@ -107,7 +107,7 @@ export const APITester: React.FC = () => {
         }
       `,
       headers: {
-        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+        'Authorization': typeof window !== 'undefined' ? `Bearer ${localStorage.getItem('auth_token') || 'NO_TOKEN'}` : 'Bearer NO_TOKEN'
       }
     },
     {
@@ -129,7 +129,7 @@ export const APITester: React.FC = () => {
         }
       },
       headers: {
-        'Authorization': 'Bearer YOUR_TOKEN_HERE'
+        'Authorization': typeof window !== 'undefined' ? `Bearer ${localStorage.getItem('auth_token') || 'NO_TOKEN'}` : 'Bearer NO_TOKEN'
       }
     }
   ];
@@ -137,8 +137,12 @@ export const APITester: React.FC = () => {
   const executeTest = async (test: APITest): Promise<TestResult> => {
     const startTime = Date.now();
     
+    console.log(`[API Test] Starting test: ${test.name}`);
+    console.log(`[API Test] Headers:`, test.headers);
+    console.log(`[API Test] Variables:`, test.variables);
+    
     try {
-      const response = await fetch('http://localhost:3001/graphql', {
+      const response = await fetch(process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:3001/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,23 +154,41 @@ export const APITester: React.FC = () => {
         })
       });
 
+      console.log(`[API Test] Response status: ${response.status}`);
+      console.log(`[API Test] Response headers:`, Object.fromEntries(response.headers.entries()));
+
       const data = await response.json();
       const responseTime = Date.now() - startTime;
 
+      console.log(`[API Test] Response data:`, data);
+
       if (response.ok && !data.errors) {
+        console.log(`[API Test] Test ${test.name} succeeded`);
         return {
           success: true,
           data: data.data,
           responseTime
         };
       } else {
+        const errorMessage = data.errors?.[0]?.message || data.message || 'Request failed';
+        console.error(`[API Test] Test ${test.name} failed:`, {
+          status: response.status,
+          statusText: response.statusText,
+          data: data,
+          test: test.name,
+          errorMessage
+        });
         return {
           success: false,
-          error: data.errors?.[0]?.message || 'Request failed',
+          error: errorMessage,
           responseTime
         };
       }
     } catch (err) {
+      console.error(`[API Test] Test ${test.name} threw error:`, err);
+      console.error(`[API Test] Error type:`, typeof err);
+      console.error(`[API Test] Error keys:`, err ? Object.keys(err as any) : 'null');
+      console.error(`[API Test] Error stack:`, (err as any)?.stack);
       return {
         success: false,
         error: err instanceof Error ? err.message : 'Network error',

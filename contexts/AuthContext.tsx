@@ -59,6 +59,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [userError]);
 
   useEffect(() => {
+    // Only run on client side to avoid hydration mismatch
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+
     const token = localStorage.getItem('auth_token');
     if (token && !user) {
       refetchUser();
@@ -68,32 +74,56 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [user, refetchUser]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    console.log('[AuthContext] Login called with email:', email);
     try {
+      if (!loginMutation) {
+        console.error('[AuthContext] Login mutation not available');
+        toast.error('Login service not available');
+        return false;
+      }
+
+      console.log('[AuthContext] Calling login mutation...');
       const { data } = await loginMutation({
         variables: { email, password },
       });
 
-      if ((data as any)?.login) {
+      console.log('[AuthContext] Login mutation response:', data);
+      console.log('[AuthContext] Data type:', typeof data);
+      console.log('[AuthContext] Data keys:', data ? Object.keys(data) : 'null');
+
+      if (data && typeof data === 'object' && 'login' in data && data.login) {
+        console.log('[AuthContext] Login successful, setting token and user');
         localStorage.setItem('auth_token', (data as any).login.access_token);
         setUser((data as any).login.user);
         toast.success('Login successful!');
         return true;
       }
+      console.log('[AuthContext] No login data in response');
       return false;
     } catch (error: any) {
-      console.error('Login error:', error);
-      toast.error(error.message || 'Login failed');
+      console.error('[AuthContext] Login error:', error);
+      console.error('[AuthContext] Error type:', typeof error);
+      console.error('[AuthContext] Error keys:', error ? Object.keys(error) : 'null');
+      console.error('[AuthContext] Error stack:', error?.stack);
+      const errorMessage = error?.message || error?.graphQLErrors?.[0]?.message || 'Login failed';
+      toast.error(errorMessage);
       return false;
     }
   };
 
   const register = async (email: string, password: string, name: string): Promise<boolean> => {
     try {
+      if (!registerMutation) {
+        console.error('Register mutation not available');
+        toast.error('Registration service not available');
+        return false;
+      }
+
       const { data } = await registerMutation({
         variables: { email, password, name },
       });
 
-      if ((data as any)?.register) {
+      if (data && typeof data === 'object' && 'register' in data && data.register) {
         localStorage.setItem('auth_token', (data as any).register.access_token);
         setUser((data as any).register.user);
         toast.success('Registration successful!');
@@ -102,7 +132,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return false;
     } catch (error: any) {
       console.error('Registration error:', error);
-      toast.error(error.message || 'Registration failed');
+      const errorMessage = error?.message || error?.graphQLErrors?.[0]?.message || 'Registration failed';
+      toast.error(errorMessage);
       return false;
     }
   };
