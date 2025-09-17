@@ -22,6 +22,8 @@ const nextConfig = {
       };
     }
     
+    // Module resolution is handled by TypeScript path mapping
+    
     return config;
   },
   // Add experimental features to help with chunk loading
