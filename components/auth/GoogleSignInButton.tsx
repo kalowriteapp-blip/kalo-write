@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -30,8 +29,13 @@ export function GoogleSignInButton({
       }
 
       // Initialize Google Identity Services
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        throw new Error('Google Client ID is not configured');
+      }
+      
       window.google.accounts.id.initialize({
-        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        client_id: clientId,
         callback: handleGoogleCallback,
         auto_select: false,
         cancel_on_tap_outside: true,
@@ -47,7 +51,7 @@ export function GoogleSignInButton({
     }
   };
 
-  const handleGoogleCallback = async (response: any) => {
+  const handleGoogleCallback = async (response: { credential: string }) => {
     try {
       setIsLoading(true);
       
@@ -177,7 +181,7 @@ declare global {
     google: {
       accounts: {
         id: {
-          initialize: (config: any) => void;
+          initialize: (config: { client_id: string; callback: (response: { credential: string }) => void; auto_select: boolean; cancel_on_tap_outside: boolean }) => void;
           prompt: () => void;
         };
       };
