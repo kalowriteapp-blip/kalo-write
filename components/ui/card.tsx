@@ -1,14 +1,10 @@
-import { cn } from '@/lib/utils';
 import { HTMLAttributes, forwardRef } from 'react';
 
 const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+  ({ className = '', ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(
-        'rounded-lg border bg-white text-gray-950 shadow-sm',
-        className
-      )}
+      className={`rounded-lg border bg-white text-gray-950 shadow-sm ${className}`}
       {...props}
     />
   )
@@ -16,10 +12,10 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 Card.displayName = 'Card';
 
 const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+  ({ className = '', ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col space-y-1.5 p-6', className)}
+      className={`flex flex-col space-y-1.5 p-6 ${className}`}
       {...props}
     />
   )
@@ -27,13 +23,10 @@ const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 CardHeader.displayName = 'CardHeader';
 
 const CardTitle = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
+  ({ className = '', ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn(
-        'text-2xl font-semibold leading-none tracking-tight',
-        className
-      )}
+      className={`text-2xl font-semibold leading-none tracking-tight ${className}`}
       {...props}
     />
   )
@@ -41,10 +34,10 @@ const CardTitle = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLHeadingEle
 CardTitle.displayName = 'CardTitle';
 
 const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+  ({ className = '', ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('p-6 pt-0', className)}
+      className={`p-6 pt-0 ${className}`}
       {...props}
     />
   )
